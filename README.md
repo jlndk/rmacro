@@ -37,7 +37,7 @@ An example could look like this:
 
 The first number on each line (the index) is the keycode of the key you want to press. The second number (the value) is the keycode of the key you want to be pressed. Alternativly you can pass a list of keycodes surrounded by `[]` if you want multiple keys to be pressed sequentially.
 
-For more advanced functions, such as media keys, some special keycodes are provided. All of these are listed on [this wiki page](https://github.com/jlndk/rmacro)
+For more advanced functions, such as media keys, some special keycodes are provided. All of these are listed on [this wiki page](https://github.com/jlndk/rmacro/wiki/Special-Keycodes)
 
 To get these keycodes you can use the provided `keyutil.py` program.
 
