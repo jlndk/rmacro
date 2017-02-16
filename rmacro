@@ -1,0 +1,100 @@
+#!/usr/bin/python
+import sys
+import copy
+
+from lib import keyboard
+from lib import media
+from lib import config
+
+# The dict that contains the configured keycodes.
+# The index works as the pressed key and the value works as the target key.
+macro_map = {}
+
+#
+# The main function of the program that starts everthing else
+#
+def main():
+    global macro_map
+
+    # Check if the extension is present
+    if not keyboard.supportsRecording():
+        print("Cannot record keyboard. RECORD extension not found")
+        sys.exit(1)
+
+    # Load keymap from config.
+    # Since the indexes in json is stores as a string, we need to convert to
+    # int's (numbers) first
+    macro_map = config.parseKeysAsIndex(config.load("config.json")["keymap"])
+
+    # Start keyboard capturing
+    keyboard.createRecordingContext(onGlobalKeystroke)
+
+#
+# This function gets called evertime the user presses a key.
+#
+def onGlobalKeystroke(reply):
+    # We only care about legit keypresses. Therefore ignore everything else
+    if not keyboard.isValidEvent(reply):
+        return
+
+    # Loop through all keystrokes and handle them one-by-one
+    while len(reply.data):
+        #But first we need to parse the keycode since it's in a binary format.
+        event, reply.data = keyboard.parseKeystroke(reply.data)
+        #Then we can handle the event
+        handleKeyEvent(event)
+
+#
+# Handles a single key event
+#
+def handleKeyEvent(event):
+    # If the event is comming from the keyboard and the key is defined in our
+    # keymap, then process it.
+    if event.type in [keyboard.KeyRelease, keyboard.KeyPress] and event.detail in macro_map:
+        # First we check whenever we should do something special when this key
+        # is pressed.
+        if not specialCases(event):
+            # If not, we just send the desired target key.
+            keyboard.send_key(macro_map[event.detail], event.type)
+
+#
+# Contains all the special cases for certain keycodes.
+#
+def specialCases(event):
+
+    #
+    # Media Keys
+    #
+    # Since the os wont recognize the media keys send through this program,
+    # we instead interupt the keystroke and manage the media functions
+    # ourselves.
+    #
+
+    #Turn volume up
+    if macro_map[event.detail] == 123:
+        if event.type ==  keyboard.KeyPress:
+            media.volume_up()
+        return True
+
+    # Turn volume down
+    if macro_map[event.detail] == 122:
+        if event.type ==  keyboard.KeyPress:
+            media.volume_down()
+        return True
+
+    # Toggle mute on/off
+    if macro_map[event.detail] == 172:
+        if event.type ==  keyboard.KeyPress:
+            media.toggle_mute()
+        return True
+
+    #If no special case applied the keystroke shouldn't be interupted
+    return False
+
+#Start the program
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("")
+        sys.exit(0)
