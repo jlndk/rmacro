@@ -1,5 +1,5 @@
 # rmacro
-Powerful and easy macro utility. Has support for razer keyboards and custom functions.
+Powerful and easy macro utility. Also has support for razer macro keys and custom functions.
 
 ## Features
 - Play macros anywhere.
@@ -8,12 +8,14 @@ Powerful and easy macro utility. Has support for razer keyboards and custom func
 - Can map any key to any other keys (one or multiple).
 
 ## Keyboard support
-Supports any keyboard, but is preconfigured for the Razer Blackwidow Chroma.
+Supports any keyboard, but is preconfigured with an example for the Razer Blackwidow Chroma's macro keys.
 
 **For the razer macro keys to work, you must install the razer linux driver first.**
 
+[Razer Linux Drivers](https://github.com/pez2001/razer_chroma_drivers)
+
 ## Installation
-- First of all, clone this repo. `git clone https://github.com/jlndk/rmacro`
+- First of all, download the [latest release](https://github.com/jlndk/rmacro/releases/latest) or clone this repo. `git clone https://github.com/jlndk/rmacro`
 - Then run the installation script `chmod +x install.sh && ./install.sh`
 - Run `rmacro.py` or use your prefered way of autostarting it on boot.
 
