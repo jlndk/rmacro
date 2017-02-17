@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import os
 import copy
 
 from lib import keyboard
@@ -9,6 +10,8 @@ from lib import config
 # The dict that contains the configured keycodes.
 # The index works as the pressed key and the value works as the target key.
 macro_map = {}
+
+base_path = os.path.dirname(os.path.realpath(__file__))
 
 #
 # The main function of the program that starts everthing else
@@ -21,10 +24,12 @@ def main():
         print("Cannot record keyboard. RECORD extension not found")
         sys.exit(1)
 
+    config_path = base_path + "/config.json"
+
     # Load keymap from config.
     # Since the indexes in json is stores as a string, we need to convert to
     # int's (numbers) first
-    macro_map = config.parseKeysAsIndex(config.load("config.json")["keymap"])
+    macro_map = config.parseKeysAsIndex(config.load(config_path)["keymap"])
 
     # Start keyboard capturing
     keyboard.createRecordingContext(onGlobalKeystroke)
